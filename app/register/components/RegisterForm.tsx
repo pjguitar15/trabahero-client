@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils'
 import * as z from 'zod'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { RegisterFormInputProps } from './types/RegisterFormTypes'
+import { RegisterFormInputProps } from '../types/RegisterFormTypes'
 import { XCircle } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 
@@ -203,7 +203,7 @@ const RegisterForm = ({
                 Register
               </Button>
               <Button disabled={loading} variant='outline' className='w-full'>
-                Login with Google
+                Register with Google
               </Button>
             </div>
 
