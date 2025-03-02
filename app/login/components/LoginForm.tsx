@@ -21,6 +21,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from '@/hooks/use-toast'
 import { LoginFormInputProps } from '../types/loginFormTypes'
 import { useRouter } from 'next/navigation'
+import { useSessionCheck } from '@/app/hooks/useSessionCheck'
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -42,12 +43,11 @@ const LoginForm = ({
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
+  useSessionCheck()
+
   const onSubmit: SubmitHandler<LoginFormInputProps> = async (data) => {
-    console.log(data)
     setLoading(true)
     setServerError(null)
-
-    await new Promise((resolve) => setTimeout(resolve, 1000)) // 1-second delay
 
     try {
       const response = await fetch('http://localhost:3001/auth/login', {
@@ -64,29 +64,48 @@ const LoginForm = ({
         throw new Error(result.message || 'Something went wrong')
       }
 
-      console.log('Login successful:', result)
+      // Save token
+      localStorage.setItem('access_token', result.access_token)
 
-      // Show success toast
+      // Fetch user info immediately after login
+      const userInfoResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API}/users/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${result.access_token}`,
+          },
+        },
+      )
+
+      if (userInfoResponse.ok) {
+        const userInfo = await userInfoResponse.json()
+        localStorage.setItem('user_info', JSON.stringify(userInfo))
+      }
+
       toast({
         title: 'Login Successful',
         description:
           'You have successfully logged in. Redirecting to Dashboard...',
       })
 
-      await new Promise((resolve) => setTimeout(resolve, 2000)) // 2-second delay
-
-      // Save token to localStorage
-      localStorage.setItem('access_token', result.access_token)
-      router.push('/dashboard')
-      // Redirect or refresh page after successful login
+      router.push('/buyer-landing/dashboard')
     } catch (error: unknown) {
+      setLoading(false)
       if (error instanceof Error) {
         setServerError(error.message)
+        toast({
+          variant: "destructive",
+          title: "Login Failed",
+          description: error.message
+        })
       } else {
-        setServerError('An unknown error occurred')
+        setServerError('An unexpected error occurred')
+        toast({
+          variant: "destructive", 
+          title: "Login Failed",
+          description: "An unexpected error occurred"
+        })
       }
-    } finally {
-      setLoading(false)
     }
   }
 

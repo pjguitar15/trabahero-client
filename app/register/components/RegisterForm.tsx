@@ -18,34 +18,38 @@ import { cn } from '@/lib/utils'
 import * as z from 'zod'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { RegisterFormInputProps } from '../types/RegisterFormTypes'
 import { XCircle } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 
-const formSchema = z
-  .object({
-    username: z
-      .string()
-      .min(3, 'Username must be at least 3 characters long')
-      .max(20, 'Username must not exceed 20 characters')
-      .regex(
-        /^[a-zA-Z0-9_]+$/,
-        'Username can only contain letters, numbers, and underscores',
-      ),
-    email: z.string().email('Invalid email address'),
-    password: z
-      .string()
-      .min(6, 'Password must be at least 6 characters')
-      .regex(
-        /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-        'Password must contain at least one uppercase letter, one number, and one special character',
-      ),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  })
+const formSchema = z.object({
+  username: z
+    .string()
+    .min(3, 'Username must be at least 3 characters long')
+    .max(20, 'Username must not exceed 20 characters')
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      'Username can only contain letters, numbers, and underscores',
+    ),
+  firstName: z
+    .string()
+    .min(2, 'First name must be at least 2 characters')
+    .max(50, 'First name must not exceed 50 characters'),
+  lastName: z
+    .string()
+    .min(2, 'Last name must be at least 2 characters')
+    .max(50, 'Last name must not exceed 50 characters'),
+  email: z.string().email('Invalid email address'),
+  password: z
+    .string()
+    .min(6, 'Password must be at least 6 characters')
+    .regex(
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+      'Password must contain at least one uppercase letter, one number, and one special character',
+    ),
+  confirmPassword: z.string(),
+})
+
+type RegisterFormInputs = z.infer<typeof formSchema>
 
 const RegisterForm = ({
   className,
@@ -55,7 +59,7 @@ const RegisterForm = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterFormInputProps>({
+  } = useForm<RegisterFormInputs>({
     resolver: zodResolver(formSchema),
   })
 
@@ -66,7 +70,7 @@ const RegisterForm = ({
   const router = useRouter()
   const { toast } = useToast()
 
-  const onSubmit: SubmitHandler<RegisterFormInputProps> = async (data) => {
+  const onSubmit: SubmitHandler<RegisterFormInputs> = async (data) => {
     setLoading(true)
     try {
       setServerError(null) // Reset error when trying to submit
@@ -124,6 +128,39 @@ const RegisterForm = ({
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className='flex flex-col gap-6'>
+              <div className='grid gap-2'>
+                <Label htmlFor='firstName'>First Name</Label>
+                <Input
+                  {...register('firstName')}
+                  id='firstName'
+                  type='text'
+                  placeholder='John'
+                  required
+                  onChange={handleInputChange}
+                />
+                {errors.firstName && (
+                  <p className='text-red-500'>
+                    {String(errors.firstName.message)}
+                  </p>
+                )}
+              </div>
+
+              <div className='grid gap-2'>
+                <Label htmlFor='lastName'>Last Name</Label>
+                <Input
+                  {...register('lastName')}
+                  id='lastName'
+                  type='text'
+                  placeholder='Doe'
+                  required
+                  onChange={handleInputChange}
+                />
+                {errors.lastName && (
+                  <p className='text-red-500'>
+                    {String(errors.lastName.message)}
+                  </p>
+                )}
+              </div>
               <div className='grid gap-2'>
                 <Label htmlFor='username'>Username</Label>
                 <Input
