@@ -1,5 +1,8 @@
+'use client'
+
 import React from 'react'
 import RegisterForm from './components/RegisterForm'
+import withGuest from '../hoc/withGuest'
 
 const Register = () => {
   return (
@@ -9,4 +12,4 @@ const Register = () => {
   )
 }
 
-export default Register
+export default withGuest(Register)

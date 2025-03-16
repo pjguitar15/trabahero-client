@@ -1,15 +1,13 @@
 'use client'
 
 import React from 'react'
-import { useSessionCheck } from './hooks/useSessionCheck'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Search } from 'lucide-react'
+import withGuest from './hoc/withGuest'
 
 const Page = () => {
-  useSessionCheck()
-
   return (
     <div className='relative min-h-screen bg-white'>
       <div className='container mx-auto px-4 py-24 mt-16'>
@@ -78,4 +76,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default withGuest(Page)

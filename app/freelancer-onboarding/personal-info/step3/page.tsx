@@ -5,8 +5,9 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import InfoSection from '@/components/InfoSection'
+import withAuth from '@/app/hoc/withAuth'
 
-export default function Step3() {
+const Step3 = () => {
   const router = useRouter()
 
   const handleContinue = () => {
@@ -53,3 +54,5 @@ export default function Step3() {
     </div>
   )
 }
+
+export default withAuth(Step3)

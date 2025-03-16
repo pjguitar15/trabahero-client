@@ -4,8 +4,9 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import InfoSection from '@/components/InfoSection'
+import withAuth from '@/app/hoc/withAuth'
 
-export default function Step2() {
+const Step2 = () => {
   const router = useRouter()
   const [occupation, setOccupation] = useState('')
   const [fromYear, setFromYear] = useState('2020')
@@ -125,3 +126,5 @@ export default function Step2() {
     </div>
   )
 }
+
+export default withAuth(Step2) // Wrap component with withAuth

@@ -107,7 +107,7 @@ export function Navbar() {
               </>
             )}
             <DropdownMenuItem asChild>
-              <Link href='/profile' className='w-full'>
+              <Link href={`/profile/${userInfo?.id}`} className='w-full'>
                 Profile
               </Link>
             </DropdownMenuItem>

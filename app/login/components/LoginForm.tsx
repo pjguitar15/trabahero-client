@@ -21,7 +21,6 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from '@/hooks/use-toast'
 import { LoginFormInputProps } from '../types/loginFormTypes'
 import { useRouter } from 'next/navigation'
-import { useSessionCheck } from '@/app/hooks/useSessionCheck'
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -42,8 +41,6 @@ const LoginForm = ({
   const [serverError, setServerError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-
-  useSessionCheck()
 
   const onSubmit: SubmitHandler<LoginFormInputProps> = async (data) => {
     setLoading(true)

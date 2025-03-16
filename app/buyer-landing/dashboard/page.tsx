@@ -3,12 +3,10 @@
 import React from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { useSessionCheck } from '@/app/hooks/useSessionCheck'
 import { Card, CardContent } from '@/components/ui/card'
+import withAuth from '@/app/hoc/withAuth'
 
-export default function BuyerLanding() {
-  useSessionCheck()
-
+const BuyerLanding = () => {
   return (
     <div className='relative min-h-screen'>
       {/* Video Background */}
@@ -84,3 +82,5 @@ export default function BuyerLanding() {
     </div>
   )
 }
+
+export default withAuth(BuyerLanding)

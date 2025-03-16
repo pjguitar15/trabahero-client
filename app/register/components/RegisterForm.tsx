@@ -34,6 +34,10 @@ const formSchema = z.object({
     .string()
     .min(2, 'First name must be at least 2 characters')
     .max(50, 'First name must not exceed 50 characters'),
+  middleName: z
+    .string()
+    .max(50, 'Middle name must not exceed 50 characters')
+    .optional(),
   lastName: z
     .string()
     .min(2, 'Last name must be at least 2 characters')
@@ -51,10 +55,7 @@ const formSchema = z.object({
 
 type RegisterFormInputs = z.infer<typeof formSchema>
 
-const RegisterForm = ({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<'div'>) => {
+const RegisterForm = (props: React.ComponentPropsWithoutRef<'div'>) => {
   const {
     register,
     handleSubmit,
@@ -63,7 +64,6 @@ const RegisterForm = ({
     resolver: zodResolver(formSchema),
   })
 
-  // State for handling errors
   const [serverError, setServerError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -73,7 +73,7 @@ const RegisterForm = ({
   const onSubmit: SubmitHandler<RegisterFormInputs> = async (data) => {
     setLoading(true)
     try {
-      setServerError(null) // Reset error when trying to submit
+      setServerError(null)
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_API}/auth/register`,
         {
@@ -91,14 +91,12 @@ const RegisterForm = ({
         throw new Error(result.message || 'Something went wrong')
       }
 
-      // Show success toast
       toast({
         title: 'Registration Successful',
         description:
           'You have successfully registered. Redirecting to login...',
       })
 
-      // Redirect after 2 seconds
       setTimeout(() => {
         router.push('/login')
       }, 2000)
@@ -113,13 +111,12 @@ const RegisterForm = ({
     }
   }
 
-  // Reset error when user types
   const handleInputChange = () => {
     if (serverError) setServerError(null)
   }
 
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
+    <div className={cn('flex flex-col gap-6', props.className)} {...props}>
       <Card>
         <CardHeader>
           <CardTitle className='text-2xl'>Register</CardTitle>
@@ -146,6 +143,22 @@ const RegisterForm = ({
               </div>
 
               <div className='grid gap-2'>
+                <Label htmlFor='middleName'>Middle Name (Optional)</Label>
+                <Input
+                  {...register('middleName')}
+                  id='middleName'
+                  type='text'
+                  placeholder='Diddy'
+                  onChange={handleInputChange}
+                />
+                {errors.middleName && (
+                  <p className='text-red-500'>
+                    {String(errors.middleName.message)}
+                  </p>
+                )}
+              </div>
+
+              <div className='grid gap-2'>
                 <Label htmlFor='lastName'>Last Name</Label>
                 <Input
                   {...register('lastName')}
@@ -161,6 +174,7 @@ const RegisterForm = ({
                   </p>
                 )}
               </div>
+
               <div className='grid gap-2'>
                 <Label htmlFor='username'>Username</Label>
                 <Input
@@ -227,7 +241,6 @@ const RegisterForm = ({
                 )}
               </div>
 
-              {/* Conditionally render error alert */}
               {serverError && (
                 <Alert variant='destructive'>
                   <XCircle className='h-4 w-4 text-red-500' />
