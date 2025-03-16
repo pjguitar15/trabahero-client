@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
+import axiosInstance from '@/utils/axiosInstance'
 
 export const useSessionCheck = () => {
   const router = useRouter()
@@ -13,14 +13,11 @@ export const useSessionCheck = () => {
       if (!token) return
 
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_API}/auth/validate-session`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const response = await axiosInstance.get('/auth/validate-session', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the authorization header
           },
-        )
+        })
 
         if (response.status === 200) {
           router.push('/buyer-landing/dashboard')

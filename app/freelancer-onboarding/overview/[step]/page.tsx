@@ -11,6 +11,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { CheckCircle } from 'lucide-react'
 import Modal from '@/components/Modal'
+import axiosInstance from '@/utils/axiosInstance'
 
 export default function OnboardingStep({
   params,
@@ -31,7 +32,22 @@ export default function OnboardingStep({
   const nextStep = stepIndex + 2
   const hasNextStep = stepIndex < onboardingSteps.length - 1
 
-  const handleProceed = () => {
+  const handleProceed = async () => {
+    const token = localStorage.getItem('access_token')
+    if (!token) return
+
+    try {
+      const payload = {
+        lastCompletedStep: 'onboarding',
+      }
+      await axiosInstance.put('/user-setup/last-completed-step', payload, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the authorization header
+        },
+      })
+    } catch (error) {
+      console.error('Error updating last completed step:', error)
+    }
     router.push('/freelancer-onboarding/personal-info')
   }
 
@@ -43,10 +59,10 @@ export default function OnboardingStep({
     <div className='container mx-auto px-4 py-8 mt-16'>
       {showModal && ( // Render modal if showModal is true
         <Modal
-          title="Congratulations!"
-          message="You have completed the onboarding overview steps. You can now proceed to personal information."
+          title='Congratulations!'
+          message='You have completed the onboarding overview steps. You can now proceed to personal information.'
           icon={<CheckCircle className='h-10 w-10 text-green-500' />}
-          buttonText="Go to Personal Information"
+          buttonText='Go to Personal Information'
           canExit={false} // Set to true if you want to allow closing
           onProceed={handleProceed}
         />
