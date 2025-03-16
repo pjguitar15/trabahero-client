@@ -10,18 +10,14 @@ const BuyerLanding = () => {
   return (
     <div className='relative min-h-screen'>
       {/* Video Background */}
-      <div className='absolute inset-0 w-full h-full overflow-hidden'>
-        <div className='absolute inset-0 bg-black/60 z-10' /> {/* Overlay */}
-        <video
-          autoPlay
-          loop
-          muted
-          className='w-full h-full object-cover'
-          poster='/images/hero-bg.jpg' // Fallback image
-        >
-          <source src='/videos/hero.mp4' type='video/mp4' />
-          Your browser does not support the video tag.
-        </video>
+      <div
+        className='absolute inset-0 w-full h-full bg-cover bg-center'
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1617259945337-93a28f685c54?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+        }}
+      >
+        <div className='absolute inset-0 bg-black/60' /> {/* Overlay */}
       </div>
 
       {/* Hero Content */}
@@ -40,7 +36,7 @@ const BuyerLanding = () => {
             asChild
           >
             <Link href='/freelancer-onboarding/overview/1'>
-              Become a Freelancer
+              Be a trabahero 🦸‍♂️
             </Link>
           </Button>
         </div>

@@ -98,7 +98,7 @@ const PersonalInfo = () => {
     try {
       await axiosInstance.put(
         '/user-setup/last-completed-step',
-        { lastCompletedStep: LastCompletedStep.PERSONAL_INFO},
+        { lastCompletedStep: LastCompletedStep.PERSONAL_INFO },
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -110,7 +110,7 @@ const PersonalInfo = () => {
 
   return (
     <div className='flex min-h-screen gap-20'>
-      <div className='w-1/2 flex items-center justify-center p-8'>
+      <div className='w-1/2 flex items-center justify-center'>
         <div className='w-full'>
           <InfoSection title='Personal Information'>
             Please fill in your personal details to get started with your
